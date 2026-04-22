@@ -1,0 +1,50 @@
+# config.yaml
+app:
+  name: "Finnie - AI Finance Assistant"
+  version: "1.0.0"
+  description: "Democratizing financial literacy through intelligent conversational AI"
+
+llm:
+  model: "gpt-4o-mini"
+  temperature: 0.3
+  max_tokens: 1000
+
+agents:
+  qa_agent:
+    description: "Handles general financial education queries"
+    temperature: 0.3
+  market_agent:
+    description: "Provides real-time market insights"
+    temperature: 0.2
+  portfolio_agent:
+    description: "Reviews and analyzes user portfolios"
+    temperature: 0.3
+  goal_agent:
+    description: "Assists with financial goal setting and planning"
+    temperature: 0.4
+  news_agent:
+    description: "Summarizes and contextualizes financial news"
+    temperature: 0.3
+  tax_agent:
+    description: "Explains tax concepts and account types"
+    temperature: 0.3
+
+rag:
+  collection_name: "finance_knowledge"
+  n_results: 3
+  embedding_model: "text-embedding-3-small"
+  articles_dir: "src/data/articles"
+  chroma_dir: "chroma_db"
+
+market_data:
+  default_watchlist:
+    - "SPY"
+    - "QQQ"
+    - "AAPL"
+    - "MSFT"
+    - "NVDA"
+    - "TSLA"
+    - "AMZN"
+    - "META"
+  default_period: "1mo"
+  max_tickers_per_query: 3

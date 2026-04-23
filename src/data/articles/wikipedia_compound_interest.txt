@@ -1,0 +1,7 @@
+TITLE: Compound interest
+SOURCE: Wikipedia
+URL: https://en.wikipedia.org/wiki/Compound_interest
+
+Compound interest is interest accumulated from a principal sum and previously accumulated interest. It is the result of reinvesting or retaining interest that would otherwise be paid out, or of the accumulation of debts from a borrower.
+
+Compound interest is contrasted with simple interest, where previously accumulated interest is not added to the principal amount of the current period. Compounded interest depends on the simple interest rate applied and the frequency at which the interest is compounded.

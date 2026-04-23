@@ -1,0 +1,17 @@
+TITLE: Mutual fund
+SOURCE: Wikipedia
+URL: https://en.wikipedia.org/wiki/Mutual_fund
+
+A mutual fund is an investment fund that pools money from many investors to purchase securities. The term is typically used in the United States, Canada, and India, while similar structures across the globe include the SICAV in Europe ('investment company with variable capital'), and the open-ended investment company (OEIC) in the UK.
+
+Mutual funds are often classified by their principal investments: money market funds, bond or fixed income funds, stock or equity funds, or hybrid funds. Funds may also be categorized as index funds, which are passively managed funds that track the performance of an index, such as a stock market index or bond market index, or actively managed funds, which seek to outperform stock market indices but generally charge higher fees. The primary structures of mutual funds are open-end funds, closed-end funds, and unit investment trusts.
+
+Over long  durations, passively managed funds consistently outperform actively managed funds.
+
+Open-end funds are purchased from or sold to the issuer at the net asset value of each share as of the close of the trading day in which the order was placed, as long as the order was placed within a specified period before the close of trading. They can be traded directly with the issuer.
+
+Mutual funds have advantages and disadvantages compared to direct investing in individual securities. The advantages of mutual funds include economies of scale, diversification, liquidity, and professional management. As with other types of investment, investing in mutual funds involves various fees and expenses.
+
+Mutual funds are regulated by governmental bodies and are required to publish information including performance, comparisons of performance to benchmarks, fees charged, and securities held. A single mutual fund may have several share classes, for which larger investors pay lower fees.
+
+Hedge funds and exchange-traded funds are not typically referred to as mutual funds, and each is targeted at different investors, with hedge funds being available only to high-net-worth individuals.

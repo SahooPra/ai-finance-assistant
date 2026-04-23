@@ -1,0 +1,17 @@
+TITLE: 401(k)
+SOURCE: Wikipedia
+URL: https://en.wikipedia.org/wiki/401(k)
+
+In the United States, a 401(k) plan is an employer-sponsored, defined-contribution, personal pension (savings) account, as defined in subsection 401(k) of the U.S. Internal Revenue Code. Periodic employee contributions come directly out of their paychecks, and may be matched by the employer. This pre-tax option is what makes tradition 401(k) plans attractive to employees, and many employers offer this option to their full-time workers. 401(k) payable is a general ledger account that contains the amount of 401(k) plan pension payments that an employer has an obligation to remit to a pension plan administrator. This account is classified as a payroll liability, since the amount owed should be paid within one year.
+
+There are two types of 401(k) plans: traditional and Roth. For Roth accounts, contributions and withdrawals have no impact on income tax due to contributions originating from post-tax income. For traditional accounts, contributions may be deducted from taxable income and withdrawals are added to taxable income. There are limits to contributions, rules governing withdrawals, and possible penalties.
+
+The benefit of Roth accounts (compared to traditional ones) is from permanently tax-free profits that would otherwise normally be taxed. The net benefit of the traditional account is the sum of:
+
+The same benefit as from the Roth account from the permanently tax-free profits on after-tax saving.
+
+A possible bonus (or penalty) from withdrawals at tax rates lower (or higher) than at contribution.
+
+The impact on qualification for other income-tested programs from contributions and withdrawals reducing and adding to taxable income.
+
+In 2019, 401(k) plans had US$6.4 trillion in assets.

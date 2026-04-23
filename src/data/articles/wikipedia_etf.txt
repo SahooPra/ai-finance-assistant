@@ -1,0 +1,17 @@
+TITLE: Exchange-traded fund
+SOURCE: Wikipedia
+URL: https://en.wikipedia.org/wiki/Exchange-traded_fund
+
+An exchange-traded fund (ETF) is a type of investment fund that is also an exchange-traded product; i.e., it is bought and sold on stock exchanges. ETFs own financial assets such as stocks, bonds, currencies, cryptocurrency, debt, futures contracts, and/or commodities such as gold bars. ETFs provide more diversification than owning an individual stock and more market liquidity than owning an individual bond.
+
+Most equity and fixed-income ETFs are index funds; they use passive management to replicate the performance of a stock market index or bond market index. These indices can be broad-based, such as the S&P 500 or focus on a certain industry such as the technology industry or the financial industry, a certain quality such as growth stocks or value stocks, a certain market capitalization, a certain factor such as high dividend stocks or value, momentum, quality, and low volatility, or a certain theme such as climate change, cloud computing, robotics, electric vehicles, the gig economy, e-commerce, or renewable energy. Other ETFs use active management, either by picking stocks or by the use of covered call strategies to generate income. For ETFs that invest in bonds, some will focus on government bonds, while others invest in corporate bonds or high-yield debt or focus on specific durations. Some ETFs use buffer strategies to reduce both risk and reward.
+
+ETF issuers are required by regulators to publish the composition of their portfolios on their websites daily, or quarterly in the case of active non-transparent ETFs. ETFs are priced continuously throughout the trading day.
+
+ETF issuers charge annual expense ratios that are as low as 0.02% of the investment value, but can be much higher for ETFs that focus on a niche. Trading in ETFs may be subject to stockbroker commissions and financial transaction taxes.
+
+ETFs can be sold short, can be purchased using funds borrowed from a stockbroker (margin), and can be purchased and sold using limit orders, with the buyer or seller aware of the price per share in advance. Options, including put options and call options, can be written or purchased on many ETFs.
+
+ETF investors generally only realize capital gains taxes when they sell their own shares for a gain, making them more attractive tax-wise than mutual funds in some cases.
+
+ETFs have similarities to mutual funds, closed-end funds, and exchange-traded notes. ETFs are regulated by governmental bodies and are subject to securities laws.

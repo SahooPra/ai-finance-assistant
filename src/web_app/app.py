@@ -16,6 +16,12 @@ from src.workflow.router import run_finance_assistant
 from src.agents.portfolio_agent import analyze_portfolio
 from src.agents.market_agent import get_stock_data
 
+# Add these imports for trade execution and portfolio management
+from src.utils.portfolio_manager import (
+    get_portfolio_summary,
+    reset_portfolio,
+)
+
 # ── Page config ──────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="Finnie - AI Finance Assistant",
@@ -100,120 +106,149 @@ with tab1:
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# TAB 2 — PORTFOLIO ANALYSIS
+#  TAB 2: MY PORTFOLIO 
 # ─────────────────────────────────────────────────────────────────────────────
 with tab2:
-    st.subheader("Portfolio Analysis")
-    st.caption("Enter your holdings to get a real-time analysis of your portfolio.")
+    st.subheader("My Portfolio")
+    st.caption("Live portfolio updated automatically as you trade via chat.")
 
-    # Portfolio input form
-    with st.expander("➕ Add Your Holdings", expanded=True):
-        st.markdown("Enter each stock you own:")
+    col_r, col_reset = st.columns([6, 1])
+    with col_r:
+        st.button("🔄 Refresh", type="primary")
+    with col_reset:
+        if st.button("↺ Reset"):
+            reset_portfolio()
+            st.success("Portfolio reset to default!")
+            st.rerun()
 
-        if "holdings" not in st.session_state:
-            st.session_state.holdings = [
-                {"ticker": "AAPL", "shares": 10, "avg_cost": 150.0},
-                {"ticker": "MSFT", "shares": 5, "avg_cost": 300.0},
-                {"ticker": "NVDA", "shares": 3, "avg_cost": 400.0},
-            ]
+    with st.spinner("Loading live portfolio..."):
+        summary = get_portfolio_summary()
 
-        # Editable holdings table
-        holdings_df = pd.DataFrame(st.session_state.holdings)
-        edited_df = st.data_editor(
-            holdings_df,
-            num_rows="dynamic",
-            column_config={
-                "ticker": st.column_config.TextColumn("Ticker Symbol", help="e.g. AAPL, TSLA"),
-                "shares": st.column_config.NumberColumn("Shares Owned", min_value=0.0),
-                "avg_cost": st.column_config.NumberColumn("Avg Cost Per Share ($)", min_value=0.0),
-            },
-            width='stretch',
+    # ── Metrics ──
+    st.divider()
+    c1, c2, c3, c4, c5 = st.columns(5)
+    c1.metric("Total Value",
+              f"${summary['total_portfolio_value']:,.2f}")
+    c2.metric("Invested",
+              f"${summary['total_invested']:,.2f}")
+    c3.metric("Market Value",
+              f"${summary['total_market_value']:,.2f}")
+    c4.metric("Gain / Loss",
+              f"${summary['total_gain_loss']:,.2f}",
+              f"{summary['total_gain_loss_pct']}%")
+    c5.metric("Cash Available",
+              f"${summary['cash_balance']:,.2f}")
+
+    st.divider()
+
+    # ── Holdings table ──
+    st.markdown("#### Holdings")
+    if summary["holdings"]:
+        rows = []
+        for h in summary["holdings"]:
+            g = h["gain_loss"]
+            p = h["gain_loss_pct"]
+            rows.append({
+                "Ticker":        h["ticker"],
+                "Shares":        h["shares"],
+                "Avg Cost":      f"${h['avg_cost']:,.2f}",
+                "Current Price": f"${h['current_price']:,.2f}",
+                "Market Value":  f"${h['market_value']:,.2f}",
+                "Gain/Loss":     f"+${g:,.2f}" if g >= 0 else f"-${abs(g):,.2f}",
+                "Return %":      f"+{p}%" if p >= 0 else f"{p}%",
+            })
+        st.dataframe(
+            pd.DataFrame(rows),
+            use_container_width=True,
+            hide_index=True
         )
 
-        analyze_btn = st.button("📊 Analyze My Portfolio", type="primary")
+        st.divider()
 
-    if analyze_btn:
-        holdings_list = edited_df.to_dict("records")
-        st.session_state.holdings = holdings_list
+        # ── Charts ──
+        col_left, col_right = st.columns(2)
 
-        with st.spinner("Fetching live prices and analyzing your portfolio..."):
-            analysis = analyze_portfolio(holdings_list)
-
-        if not analysis["holdings"]:
-            st.error("Could not fetch data. Please check your ticker symbols.")
-        else:
-            # ── Summary metrics ──
-            st.divider()
-            col1, col2, col3, col4 = st.columns(4)
-            gain_color = "normal" if analysis["total_gain_loss"] >= 0 else "inverse"
-            col1.metric("Total Value", f"${analysis['total_value']:,.2f}")
-            col2.metric("Total Cost", f"${analysis['total_cost']:,.2f}")
-            col3.metric(
-                "Total Gain/Loss",
-                f"${analysis['total_gain_loss']:,.2f}",
-                f"{analysis['total_gain_loss_pct']}%"
+        with col_left:
+            st.markdown("#### Allocation")
+            fig_pie = px.pie(
+                values=[h["market_value"] for h in summary["holdings"]],
+                names=[h["ticker"]       for h in summary["holdings"]],
+                hole=0.4,
             )
-            col4.metric("Holdings", len(analysis["holdings"]))
+            fig_pie.update_layout(margin=dict(t=10, b=10, l=10, r=10))
+            st.plotly_chart(fig_pie, use_container_width=True)
 
-            st.divider()
+        with col_right:
+            st.markdown("#### Gain / Loss by Stock")
+            colors = [
+                "#10B981" if h["gain_loss"] >= 0 else "#EF4444"
+                for h in summary["holdings"]
+            ]
+            fig_bar = go.Figure(go.Bar(
+                x=[h["ticker"]    for h in summary["holdings"]],
+                y=[h["gain_loss"] for h in summary["holdings"]],
+                marker_color=colors,
+                text=[f"${h['gain_loss']:,.2f}" for h in summary["holdings"]],
+                textposition="outside",
+            ))
+            fig_bar.update_layout(
+                yaxis_title="Gain / Loss ($)",
+                margin=dict(t=20, b=10),
+            )
+            st.plotly_chart(fig_bar, use_container_width=True)
 
-            # ── Holdings table ──
-            st.markdown("#### Holdings Breakdown")
-            rows = []
-            for h in analysis["holdings"]:
-                rows.append({
-                    "Ticker": h["ticker"],
-                    "Shares": h["shares"],
-                    "Avg Cost": f"${h['avg_cost']}",
-                    "Current Price": f"${h['current_price']}",
-                    "Market Value": f"${h['market_value']:,.2f}",
-                    "Gain/Loss": f"${h['gain_loss']:,.2f}",
-                    "Gain/Loss %": f"{h['gain_loss_pct']}%",
-                })
-            st.dataframe(pd.DataFrame(rows), width='stretch')
+    else:
+        st.info(
+            "No holdings yet! Go to the **Chat** tab and try:\n"
+            "*\"Buy 5 shares of Apple\"*"
+        )
 
-            st.divider()
+    # ── Transaction history ──
+    st.divider()
+    st.markdown("#### Transaction History")
+    transactions = summary.get("transactions", [])
+    if transactions:
+        tx_rows = []
+        for tx in transactions[:20]:
+            g = tx.get("realized_gain", "")
+            tx_rows.append({
+                "Date":   tx["date"],
+                "Type":   tx["type"],
+                "Ticker": tx["ticker"],
+                "Shares": tx["shares"],
+                "Price":  f"${tx['price']:,.2f}",
+                "Total":  f"${tx['total']:,.2f}",
+                "Realized G/L": (
+                    f"+${g:,.2f}" if isinstance(g, float) and g >= 0
+                    else f"-${abs(g):,.2f}" if isinstance(g, float)
+                    else ""
+                ),
+                "Note": tx.get("note", ""),
+            })
+        st.dataframe(
+            pd.DataFrame(tx_rows),
+            use_container_width=True,
+            hide_index=True
+        )
+    else:
+        st.info("No transactions yet.")
 
-            # ── Charts ──
-            col_left, col_right = st.columns(2)
-
-            with col_left:
-                st.markdown("#### Portfolio Allocation")
-                fig_pie = px.pie(
-                    values=[h["market_value"] for h in analysis["holdings"]],
-                    names=[h["ticker"] for h in analysis["holdings"]],
-                    hole=0.4,
-                )
-                fig_pie.update_layout(margin=dict(t=0, b=0, l=0, r=0))
-                st.plotly_chart(fig_pie, width='stretch')
-
-            with col_right:
-                st.markdown("#### Gain / Loss by Stock")
-                colors = ["green" if h["gain_loss"] >= 0 else "red"
-                          for h in analysis["holdings"]]
-                fig_bar = go.Figure(go.Bar(
-                    x=[h["ticker"] for h in analysis["holdings"]],
-                    y=[h["gain_loss"] for h in analysis["holdings"]],
-                    marker_color=colors,
-                    text=[f"${h['gain_loss']:,.2f}" for h in analysis["holdings"]],
-                    textposition="outside",
-                ))
-                fig_bar.update_layout(
-                    yaxis_title="Gain / Loss ($)",
-                    margin=dict(t=20, b=0),
-                )
-                st.plotly_chart(fig_bar, width='stretch')
-
-            # ── AI Analysis ──
-            st.divider()
-            st.markdown("#### Finnie's Analysis")
-            with st.spinner("Finnie is reviewing your portfolio..."):
-                portfolio_question = "Please analyze my portfolio and give me educational insights about diversification and risk."
-                ai_response = run_finance_assistant(
-                    portfolio_question,
-                    holdings=holdings_list
-                )
-            st.info(ai_response)
+    # ── AI analysis ──
+    st.divider()
+    if st.button("🤖 Get AI Portfolio Analysis"):
+        holdings_list = [
+            {"ticker": h["ticker"],
+             "shares": h["shares"],
+             "avg_cost": h["avg_cost"]}
+            for h in summary["holdings"]
+        ]
+        with st.spinner("Finnie is analyzing..."):
+            ai_resp = run_finance_assistant(
+                "Analyze my portfolio and give educational insights "
+                "about diversification, sector exposure, and risk.",
+                holdings=holdings_list
+            )
+        st.info(ai_resp)
 
 
 # ─────────────────────────────────────────────────────────────────────────────

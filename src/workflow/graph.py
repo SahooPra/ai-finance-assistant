@@ -7,88 +7,79 @@ from src.agents.portfolio_agent import run_portfolio_agent
 from src.agents.goal_agent import run_goal_agent
 from src.agents.news_agent import run_news_agent
 from src.agents.tax_agent import run_tax_agent
+from src.agents.trade_agent import run_trade_agent
 from src.utils.guardrails import (
-    check_input,
-    check_output,
-    add_referral_note
+    check_input, check_output, add_referral_note
 )
 
 
 class FinanceState(TypedDict):
-    question: str
-    intent: str
-    response: str
-    chat_history: list
-    holdings: list
-    error: str
-    blocked: bool       # True if input guardrail blocked the question
-    needs_referral: bool  # True if response should suggest a professional
+    question:      str
+    intent:        str
+    response:      str
+    chat_history:  list
+    holdings:      list
+    error:         str
+    blocked:       bool
+    needs_referral: bool
 
 
-# ── Node: Input Guardrail ─────────────────────────────────────────────────────
+# ── Input guardrail ───────────────────────────────────────────────────────────
 def input_guardrail_node(state: FinanceState) -> FinanceState:
-    """
-    First node — checks question before routing to any agent.
-    Blocks harmful, off-topic, or illegal requests.
-    """
     print("[Guardrail] Checking input...")
     result = check_input(state["question"])
-
     if not result["safe"]:
-        print(f"[Guardrail] Input blocked: {result['reason']}")
-        return {
-            **state,
-            "blocked": True,
-            "response": result["response"],
-        }
-
+        print(f"[Guardrail] Blocked: {result['reason']}")
+        return {**state, "blocked": True, "response": result["response"]}
     return {
         **state,
-        "blocked": False,
+        "blocked":       False,
         "needs_referral": result.get("needs_referral", False),
     }
 
 
 def route_after_input_guardrail(state: FinanceState) -> str:
-    """Routes to blocked handler or intent detection."""
-    if state.get("blocked"):
-        return "blocked"
-    return "detect_intent"
+    return "blocked" if state.get("blocked") else "detect_intent"
 
 
-# ── Node: Intent Detection ────────────────────────────────────────────────────
+# ── Intent detection ──────────────────────────────────────────────────────────
 def detect_intent_node(state: FinanceState) -> FinanceState:
     question = state["question"].lower()
 
+    trade_keywords = [
+        "buy ", "sell ", "purchase ", "acquire ",
+        "buy shares", "sell shares", "i want to buy",
+        "i want to sell", "can you buy", "can you sell",
+        "place a trade", "execute a trade",
+        "add to my portfolio", "buy stock", "sell stock",
+    ]
     market_keywords = [
         "price", "stock price", "trading at", "share price",
         "how much is", "current price", "market cap",
-        "aapl", "tsla", "nvda", "msft", "googl", "amzn", "meta",
-        "apple stock", "tesla stock", "nvidia stock",
-        "sp500", "nasdaq", "dow", "s&p"
+        "aapl", "tsla", "nvda", "msft", "googl", "amzn",
+        "apple stock", "tesla stock", "sp500", "nasdaq", "dow",
     ]
     portfolio_keywords = [
         "my portfolio", "my stocks", "my holdings", "i own",
-        "i bought", "my shares", "portfolio analysis",
-        "my investment", "how am i doing", "my position"
+        "my shares", "portfolio analysis", "how am i doing",
     ]
     goal_keywords = [
         "retire", "retirement", "save for", "saving for", "goal",
-        "how much do i need", "emergency fund", "buy a house",
-        "college fund", "financial goal", "budget", "50/30/20",
-        "how long will it take"
+        "emergency fund", "buy a house", "financial goal",
+        "budget", "50/30/20", "how long will it take",
     ]
     news_keywords = [
         "news", "latest", "headline", "what happened",
-        "recent", "today's news", "market news", "what's happening"
+        "recent", "market news", "what's happening",
     ]
     tax_keywords = [
         "tax", "taxes", "capital gains", "401k", "ira", "roth",
-        "traditional ira", "tax-advantaged", "pre-tax", "post-tax",
-        "deduction", "dividend tax", "tax loss", "hsa"
+        "tax-advantaged", "pre-tax", "post-tax", "hsa",
     ]
 
-    if any(w in question for w in market_keywords):
+    if any(w in question for w in trade_keywords):
+        intent = "trade"
+    elif any(w in question for w in market_keywords):
         intent = "market"
     elif any(w in question for w in portfolio_keywords):
         intent = "portfolio"
@@ -105,124 +96,95 @@ def detect_intent_node(state: FinanceState) -> FinanceState:
     return {**state, "intent": intent}
 
 
-# ── Agent Nodes ───────────────────────────────────────────────────────────────
-def qa_node(state: FinanceState) -> FinanceState:
+# ── Agent nodes ───────────────────────────────────────────────────────────────
+def _run(fn, state, *args):
+    try:
+        response = fn(*args)
+        return {**state, "response": response, "error": ""}
+    except Exception as e:
+        return {**state, "response": "", "error": str(e)}
+
+
+def qa_node(state):
     print("[LangGraph] Running QA agent...")
-    try:
-        response = run_qa_agent(state["question"], state.get("chat_history", []))
-        return {**state, "response": response, "error": ""}
-    except Exception as e:
-        return {**state, "response": "", "error": str(e)}
+    return _run(run_qa_agent, state,
+                state["question"], state.get("chat_history", []))
 
-
-def market_node(state: FinanceState) -> FinanceState:
+def market_node(state):
     print("[LangGraph] Running Market agent...")
-    try:
-        response = run_market_agent(state["question"], state.get("chat_history", []))
-        return {**state, "response": response, "error": ""}
-    except Exception as e:
-        return {**state, "response": "", "error": str(e)}
+    return _run(run_market_agent, state,
+                state["question"], state.get("chat_history", []))
 
-
-def portfolio_node(state: FinanceState) -> FinanceState:
+def portfolio_node(state):
     print("[LangGraph] Running Portfolio agent...")
-    try:
-        response = run_portfolio_agent(
-            state["question"],
-            state.get("holdings", []),
-            state.get("chat_history", [])
-        )
-        return {**state, "response": response, "error": ""}
-    except Exception as e:
-        return {**state, "response": "", "error": str(e)}
+    return _run(run_portfolio_agent, state,
+                state["question"],
+                state.get("holdings", []),
+                state.get("chat_history", []))
 
-
-def goal_node(state: FinanceState) -> FinanceState:
+def goal_node(state):
     print("[LangGraph] Running Goal agent...")
-    try:
-        response = run_goal_agent(state["question"], state.get("chat_history", []))
-        return {**state, "response": response, "error": ""}
-    except Exception as e:
-        return {**state, "response": "", "error": str(e)}
+    return _run(run_goal_agent, state,
+                state["question"], state.get("chat_history", []))
 
-
-def news_node(state: FinanceState) -> FinanceState:
+def news_node(state):
     print("[LangGraph] Running News agent...")
-    try:
-        response = run_news_agent(state["question"], state.get("chat_history", []))
-        return {**state, "response": response, "error": ""}
-    except Exception as e:
-        return {**state, "response": "", "error": str(e)}
+    return _run(run_news_agent, state,
+                state["question"], state.get("chat_history", []))
 
-
-def tax_node(state: FinanceState) -> FinanceState:
+def tax_node(state):
     print("[LangGraph] Running Tax agent...")
-    try:
-        response = run_tax_agent(state["question"], state.get("chat_history", []))
-        return {**state, "response": response, "error": ""}
-    except Exception as e:
-        return {**state, "response": "", "error": str(e)}
+    return _run(run_tax_agent, state,
+                state["question"], state.get("chat_history", []))
+
+def trade_node(state):
+    print("[LangGraph] Running Trade agent...")
+    return _run(run_trade_agent, state,
+                state["question"], state.get("chat_history", []))
+
+def blocked_node(state):
+    print("[Guardrail] Returning blocked response.")
+    return state
+
+def error_handler_node(state):
+    print(f"[LangGraph] Error: {state.get('error')}")
+    return {**state, "response": (
+        "I encountered an issue processing your request. "
+        "Please try rephrasing and try again.\n\n"
+        "*Note: Educational tool only, not financial advice.*"
+    )}
 
 
-# ── Node: Output Guardrail ────────────────────────────────────────────────────
+# ── Output guardrail ──────────────────────────────────────────────────────────
 def output_guardrail_node(state: FinanceState) -> FinanceState:
-    """
-    Last node before returning to user.
-    Cleans response, adds disclaimers, appends referral note if needed.
-    """
     print("[Guardrail] Checking output...")
     response = state.get("response", "")
-
     if not response:
         return state
 
-    result = check_output(response, state["question"])
+    result  = check_output(response, state["question"])
     cleaned = result["cleaned_response"]
 
-    # Add professional referral note if flagged
     if state.get("needs_referral"):
         cleaned = add_referral_note(cleaned)
-        print("[Guardrail] Added professional referral note.")
-
-    if result["warning_added"]:
-        print("[Guardrail] Added/strengthened disclaimer.")
 
     return {**state, "response": cleaned}
 
 
-# ── Node: Blocked response ────────────────────────────────────────────────────
-def blocked_node(state: FinanceState) -> FinanceState:
-    """Passes through the blocked message from input guardrail."""
-    print("[Guardrail] Returning blocked response.")
-    return state
-
-
-# ── Node: Error handler ───────────────────────────────────────────────────────
-def error_handler_node(state: FinanceState) -> FinanceState:
-    print(f"[LangGraph] Error handled: {state.get('error')}")
-    fallback = (
-        "I'm sorry, I encountered an issue processing your request. "
-        "Please try rephrasing your question or try again in a moment.\n\n"
-        "*Note: This is educational information only, not financial advice.*"
-    )
-    return {**state, "response": fallback}
-
-
+# ── Routing functions ─────────────────────────────────────────────────────────
 def route_to_agent(state: FinanceState) -> str:
     return state["intent"]
 
 
 def check_for_error(state: FinanceState) -> str:
-    if state.get("error"):
-        return "error"
-    return "output_guardrail"
+    return "error" if state.get("error") else "output_guardrail"
 
 
-# ── Build the Graph ───────────────────────────────────────────────────────────
+# ── Build graph ───────────────────────────────────────────────────────────────
 def build_finance_graph():
     graph = StateGraph(FinanceState)
 
-    # Add all nodes
+    # Nodes
     graph.add_node("input_guardrail",  input_guardrail_node)
     graph.add_node("detect_intent",    detect_intent_node)
     graph.add_node("blocked",          blocked_node)
@@ -232,26 +194,24 @@ def build_finance_graph():
     graph.add_node("goal",             goal_node)
     graph.add_node("news",             news_node)
     graph.add_node("tax",              tax_node)
+    graph.add_node("trade",            trade_node)
     graph.add_node("output_guardrail", output_guardrail_node)
     graph.add_node("error_handler",    error_handler_node)
 
-    # Entry point → input guardrail always runs first
+    # Entry
     graph.set_entry_point("input_guardrail")
 
-    # After input guardrail: blocked or detect intent
+    # Input guardrail → blocked or detect_intent
     graph.add_conditional_edges(
         "input_guardrail",
         route_after_input_guardrail,
-        {
-            "blocked":      "blocked",
-            "detect_intent": "detect_intent",
-        }
+        {"blocked": "blocked", "detect_intent": "detect_intent"}
     )
 
-    # Blocked → output guardrail (to add formatting) → END
+    # Blocked → output guardrail → END
     graph.add_edge("blocked", "output_guardrail")
 
-    # After intent detection → route to correct agent
+    # Intent → agent
     graph.add_conditional_edges(
         "detect_intent",
         route_to_agent,
@@ -262,11 +222,15 @@ def build_finance_graph():
             "goal":      "goal",
             "news":      "news",
             "tax":       "tax",
+            "trade":     "trade",
         }
     )
 
-    # After each agent → check for error or go to output guardrail
-    for agent in ["qa", "market", "portfolio", "goal", "news", "tax"]:
+    # Each agent → error check → output guardrail or error
+    for agent in [
+        "qa", "market", "portfolio",
+        "goal", "news", "tax", "trade"
+    ]:
         graph.add_conditional_edges(
             agent,
             check_for_error,
@@ -276,7 +240,6 @@ def build_finance_graph():
             }
         )
 
-    # Output guardrail and error handler → END
     graph.add_edge("output_guardrail", END)
     graph.add_edge("error_handler",    END)
 

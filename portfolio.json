@@ -1,0 +1,91 @@
+{
+  "cash_balance": 9732.5,
+  "holdings": {
+    "AAPL": {
+      "shares": 10,
+      "avg_cost": 150.0,
+      "total_invested": 1500.0
+    },
+    "MSFT": {
+      "shares": 5,
+      "avg_cost": 300.0,
+      "total_invested": 1500.0
+    },
+    "NVDA": {
+      "shares": 3,
+      "avg_cost": 400.0,
+      "total_invested": 1200.0
+    },
+    "SPY": {
+      "shares": 4,
+      "avg_cost": 420.0,
+      "total_invested": 1680.0
+    },
+    "TSLA": {
+      "shares": 8,
+      "avg_cost": 200.0,
+      "total_invested": 1600.0
+    },
+    "SMCI": {
+      "shares": 10.0,
+      "avg_cost": 26.75,
+      "total_invested": 267.5
+    }
+  },
+  "transactions": [
+    {
+      "date": "2026-04-24 01:00",
+      "type": "BUY",
+      "ticker": "SMCI",
+      "shares": 10.0,
+      "price": 26.75,
+      "total": 267.5,
+      "note": "Bought via chat"
+    },
+    {
+      "date": "2024-01-15",
+      "type": "BUY",
+      "ticker": "AAPL",
+      "shares": 10,
+      "price": 150.0,
+      "total": 1500.0,
+      "note": "Initial position"
+    },
+    {
+      "date": "2024-01-15",
+      "type": "BUY",
+      "ticker": "MSFT",
+      "shares": 5,
+      "price": 300.0,
+      "total": 1500.0,
+      "note": "Initial position"
+    },
+    {
+      "date": "2024-02-01",
+      "type": "BUY",
+      "ticker": "NVDA",
+      "shares": 3,
+      "price": 400.0,
+      "total": 1200.0,
+      "note": "Initial position"
+    },
+    {
+      "date": "2024-02-15",
+      "type": "BUY",
+      "ticker": "SPY",
+      "shares": 4,
+      "price": 420.0,
+      "total": 1680.0,
+      "note": "Index fund allocation"
+    },
+    {
+      "date": "2024-03-01",
+      "type": "BUY",
+      "ticker": "TSLA",
+      "shares": 8,
+      "price": 200.0,
+      "total": 1600.0,
+      "note": "Initial position"
+    }
+  ]
+}

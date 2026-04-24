@@ -1,10 +1,10 @@
 {
-  "cash_balance": 9732.5,
+  "cash_balance": 8587.68,
   "holdings": {
     "AAPL": {
-      "shares": 10,
-      "avg_cost": 150.0,
-      "total_invested": 1500.0
+      "shares": 17.0,
+      "avg_cost": 199.85,
+      "total_invested": 3397.42
     },
     "MSFT": {
       "shares": 5,
@@ -22,9 +22,9 @@
       "total_invested": 1680.0
     },
     "TSLA": {
-      "shares": 8,
+      "shares": 6.0,
       "avg_cost": 200.0,
-      "total_invested": 1600.0
+      "total_invested": 1200.0
     },
     "SMCI": {
       "shares": 10.0,
@@ -33,6 +33,55 @@
     }
   },
   "transactions": [
+    {
+      "date": "2026-04-24 16:46",
+      "type": "BUY",
+      "ticker": "AAPL",
+      "shares": 3.0,
+      "price": 271.06,
+      "total": 813.18,
+      "note": "Bought via chat"
+    },
+    {
+      "date": "2026-04-24 16:35",
+      "type": "SELL",
+      "ticker": "TSLA",
+      "shares": 1.0,
+      "price": 376.3,
+      "total": 376.3,
+      "realized_gain": 176.3,
+      "realized_gain_pct": 88.15,
+      "note": "Sold via chat"
+    },
+    {
+      "date": "2026-04-24 16:35",
+      "type": "BUY",
+      "ticker": "AAPL",
+      "shares": 2.0,
+      "price": 271.06,
+      "total": 542.12,
+      "note": "Bought via chat"
+    },
+    {
+      "date": "2026-04-24 16:34",
+      "type": "SELL",
+      "ticker": "TSLA",
+      "shares": 1.0,
+      "price": 376.3,
+      "total": 376.3,
+      "realized_gain": 176.3,
+      "realized_gain_pct": 88.15,
+      "note": "Sold via chat"
+    },
+    {
+      "date": "2026-04-24 16:33",
+      "type": "BUY",
+      "ticker": "AAPL",
+      "shares": 2.0,
+      "price": 271.06,
+      "total": 542.12,
+      "note": "Bought via chat"
+    },
     {
       "date": "2026-04-24 01:00",
       "type": "BUY",

@@ -1,0 +1,200 @@
+<svg width="100%" viewBox="0 0 680 860" role="img" xmlns="http://www.w3.org/2000/svg">
+  <title>Finnie AI Finance Assistant — full architecture v2</title>
+  <desc>Structural diagram showing all layers: Streamlit UI, guardrails, LangGraph state machine, seven specialized agents, portfolio manager, RAG knowledge base, Wikipedia articles, market data API, and project files</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="#888780" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <style>
+      text { font-family: Arial, sans-serif; }
+      .th  { font-size: 14px; font-weight: 600; fill: #1E293B; }
+      .ts  { font-size: 12px; font-weight: 400; fill: #475569; }
+      .arr { stroke: #888780; stroke-width: 1.5; fill: none; }
+      .c-teal   rect { fill: #E1F5EE; stroke: #0F6E56; }
+      .c-teal   .th  { fill: #085041; }
+      .c-teal   .ts  { fill: #0F6E56; }
+      .c-red    rect { fill: #FCEBEB; stroke: #A32D2D; }
+      .c-red    .th  { fill: #791F1F; }
+      .c-red    .ts  { fill: #A32D2D; }
+      .c-purple rect { fill: #EEEDFE; stroke: #534AB7; }
+      .c-purple .th  { fill: #3C3489; }
+      .c-purple .ts  { fill: #534AB7; }
+      .c-blue   rect { fill: #E6F1FB; stroke: #185FA5; }
+      .c-blue   .th  { fill: #0C447C; }
+      .c-blue   .ts  { fill: #185FA5; }
+      .c-coral  rect { fill: #FAECE7; stroke: #993C1D; }
+      .c-coral  .th  { fill: #712B13; }
+      .c-coral  .ts  { fill: #993C1D; }
+      .c-amber  rect { fill: #FAEEDA; stroke: #854F0B; }
+      .c-amber  .th  { fill: #633806; }
+      .c-amber  .ts  { fill: #854F0B; }
+      .c-gray   rect { fill: #F1EFE8; stroke: #5F5E5A; }
+      .c-gray   .th  { fill: #444441; }
+      .c-gray   .ts  { fill: #5F5E5A; }
+    </style>
+  </defs>
+
+  <!-- TIER 1: UI -->
+  <g class="c-teal">
+    <rect x="165" y="16" width="350" height="52" rx="8" stroke-width="0.5"/>
+    <text class="th" x="340" y="34" text-anchor="middle" dominant-baseline="central">Streamlit web UI</text>
+    <text class="ts" x="340" y="54" text-anchor="middle" dominant-baseline="central">Chat · Portfolio · Market tabs</text>
+  </g>
+  <line x1="340" y1="68" x2="340" y2="100" class="arr" marker-end="url(#arrow)"/>
+
+  <!-- TIER 2: Guardrails -->
+  <g class="c-red">
+    <rect x="115" y="100" width="450" height="56" rx="8" stroke-width="0.5"/>
+    <text class="th" x="340" y="120" text-anchor="middle" dominant-baseline="central">Guardrails layer</text>
+    <text class="ts" x="340" y="140" text-anchor="middle" dominant-baseline="central">Input check · blocked patterns · off-topic filter · output disclaimer</text>
+  </g>
+  <line x1="340" y1="156" x2="340" y2="188" class="arr" marker-end="url(#arrow)"/>
+
+  <!-- TIER 3: LangGraph -->
+  <g class="c-purple">
+    <rect x="115" y="188" width="450" height="56" rx="8" stroke-width="0.5"/>
+    <text class="th" x="340" y="208" text-anchor="middle" dominant-baseline="central">LangGraph state machine</text>
+    <text class="ts" x="340" y="228" text-anchor="middle" dominant-baseline="central">FinanceState · detect_intent · conditional edges · error handler</text>
+  </g>
+
+  <!-- fan arrows -->
+  <line x1="178" y1="244" x2="66"  y2="308" class="arr" marker-end="url(#arrow)"/>
+  <line x1="218" y1="244" x2="162" y2="308" class="arr" marker-end="url(#arrow)"/>
+  <line x1="268" y1="244" x2="258" y2="308" class="arr" marker-end="url(#arrow)"/>
+  <line x1="340" y1="244" x2="354" y2="308" class="arr" marker-end="url(#arrow)"/>
+  <line x1="412" y1="244" x2="450" y2="308" class="arr" marker-end="url(#arrow)"/>
+  <line x1="462" y1="244" x2="541" y2="308" class="arr" marker-end="url(#arrow)"/>
+  <line x1="502" y1="244" x2="623" y2="308" class="arr" marker-end="url(#arrow)"/>
+
+  <!-- TIER 4: Agents -->
+  <g class="c-blue">
+    <rect x="22"  y="308" width="88" height="56" rx="8" stroke-width="0.5"/>
+    <text class="th" x="66"  y="328" text-anchor="middle" dominant-baseline="central">Finance</text>
+    <text class="ts" x="66"  y="348" text-anchor="middle" dominant-baseline="central">Q&amp;A + RAG</text>
+  </g>
+  <g class="c-blue">
+    <rect x="118" y="308" width="88" height="56" rx="8" stroke-width="0.5"/>
+    <text class="th" x="162" y="328" text-anchor="middle" dominant-baseline="central">Market</text>
+    <text class="ts" x="162" y="348" text-anchor="middle" dominant-baseline="central">Live prices</text>
+  </g>
+  <g class="c-blue">
+    <rect x="214" y="308" width="88" height="56" rx="8" stroke-width="0.5"/>
+    <text class="th" x="258" y="328" text-anchor="middle" dominant-baseline="central">Portfolio</text>
+    <text class="ts" x="258" y="348" text-anchor="middle" dominant-baseline="central">Holdings P&amp;L</text>
+  </g>
+  <g class="c-coral">
+    <rect x="310" y="308" width="88" height="56" rx="8" stroke-width="0.5"/>
+    <text class="th" x="354" y="328" text-anchor="middle" dominant-baseline="central">Goal</text>
+    <text class="ts" x="354" y="348" text-anchor="middle" dominant-baseline="central">Savings math</text>
+  </g>
+  <g class="c-coral">
+    <rect x="406" y="308" width="88" height="56" rx="8" stroke-width="0.5"/>
+    <text class="th" x="450" y="328" text-anchor="middle" dominant-baseline="central">News</text>
+    <text class="ts" x="450" y="348" text-anchor="middle" dominant-baseline="central">Headlines</text>
+  </g>
+  <g class="c-coral">
+    <rect x="502" y="308" width="78" height="56" rx="8" stroke-width="0.5"/>
+    <text class="th" x="541" y="328" text-anchor="middle" dominant-baseline="central">Tax</text>
+    <text class="ts" x="541" y="348" text-anchor="middle" dominant-baseline="central">IRA · 401k</text>
+  </g>
+  <g class="c-amber">
+    <rect x="588" y="308" width="70" height="56" rx="8" stroke-width="0.5"/>
+    <text class="th" x="623" y="328" text-anchor="middle" dominant-baseline="central">Trade</text>
+    <text class="ts" x="623" y="348" text-anchor="middle" dominant-baseline="central">Buy · Sell</text>
+  </g>
+
+  <!-- Legend -->
+  <rect x="22"  y="378" width="10" height="10" rx="2" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+  <text class="ts" x="36"  y="386" dominant-baseline="central">Education agents</text>
+  <rect x="140" y="378" width="10" height="10" rx="2" fill="#FAECE7" stroke="#993C1D" stroke-width="0.5"/>
+  <text class="ts" x="154" y="386" dominant-baseline="central">Planning agents</text>
+  <rect x="258" y="378" width="10" height="10" rx="2" fill="#FAEEDA" stroke="#854F0B" stroke-width="0.5"/>
+  <text class="ts" x="272" y="386" dominant-baseline="central">Trade agent</text>
+
+  <line x1="340" y1="400" x2="340" y2="428" class="arr" marker-end="url(#arrow)"/>
+
+  <!-- TIER 5: Portfolio manager -->
+  <g class="c-amber">
+    <rect x="115" y="428" width="450" height="56" rx="8" stroke-width="0.5"/>
+    <text class="th" x="340" y="448" text-anchor="middle" dominant-baseline="central">Portfolio manager</text>
+    <text class="ts" x="340" y="468" text-anchor="middle" dominant-baseline="central">portfolio.json · buy · sell · get_live_price · get_portfolio_summary</text>
+  </g>
+  <line x1="340" y1="484" x2="340" y2="512" class="arr" marker-end="url(#arrow)"/>
+
+  <!-- TIER 6: Shared infra -->
+  <g class="c-gray">
+    <rect x="22" y="512" width="636" height="22" rx="6" stroke-width="0.5"/>
+    <text class="ts" x="340" y="523" text-anchor="middle" dominant-baseline="central">Shared infrastructure</text>
+  </g>
+  <g class="c-gray">
+    <rect x="22"  y="544" width="152" height="64" rx="8" stroke-width="0.5"/>
+    <text class="th" x="98"  y="562" text-anchor="middle" dominant-baseline="central">RAG system</text>
+    <text class="ts" x="98"  y="580" text-anchor="middle" dominant-baseline="central">ChromaDB · embeddings</text>
+    <text class="ts" x="98"  y="598" text-anchor="middle" dominant-baseline="central">semantic retrieval</text>
+  </g>
+  <g class="c-gray">
+    <rect x="186" y="544" width="152" height="64" rx="8" stroke-width="0.5"/>
+    <text class="th" x="262" y="562" text-anchor="middle" dominant-baseline="central">LLM config</text>
+    <text class="ts" x="262" y="580" text-anchor="middle" dominant-baseline="central">GPT-4o-mini</text>
+    <text class="ts" x="262" y="598" text-anchor="middle" dominant-baseline="central">temp 0.2 – 0.4</text>
+  </g>
+  <g class="c-gray">
+    <rect x="350" y="544" width="152" height="64" rx="8" stroke-width="0.5"/>
+    <text class="th" x="426" y="562" text-anchor="middle" dominant-baseline="central">Market data</text>
+    <text class="ts" x="426" y="580" text-anchor="middle" dominant-baseline="central">yFinance API</text>
+    <text class="ts" x="426" y="598" text-anchor="middle" dominant-baseline="central">prices · news · history</text>
+  </g>
+  <g class="c-gray">
+    <rect x="514" y="544" width="144" height="64" rx="8" stroke-width="0.5"/>
+    <text class="th" x="586" y="562" text-anchor="middle" dominant-baseline="central">Router</text>
+    <text class="ts" x="586" y="580" text-anchor="middle" dominant-baseline="central">router.py</text>
+    <text class="ts" x="586" y="598" text-anchor="middle" dominant-baseline="central">graph.invoke()</text>
+  </g>
+
+  <!-- TIER 7: Knowledge base -->
+  <g class="c-gray">
+    <rect x="22" y="626" width="636" height="22" rx="6" stroke-width="0.5"/>
+    <text class="ts" x="340" y="637" text-anchor="middle" dominant-baseline="central">RAG knowledge base articles</text>
+  </g>
+  <g class="c-gray">
+    <rect x="22"  y="658" width="192" height="44" rx="8" stroke-width="0.5"/>
+    <text class="th" x="118" y="672" text-anchor="middle" dominant-baseline="central">investing_basics.txt</text>
+    <text class="ts" x="118" y="690" text-anchor="middle" dominant-baseline="central">stocks · ETFs · bonds · risk</text>
+  </g>
+  <g class="c-gray">
+    <rect x="226" y="658" width="214" height="44" rx="8" stroke-width="0.5"/>
+    <text class="th" x="333" y="672" text-anchor="middle" dominant-baseline="central">retirement_accounts.txt</text>
+    <text class="ts" x="333" y="690" text-anchor="middle" dominant-baseline="central">401k · Roth IRA · DCA</text>
+  </g>
+  <g class="c-gray">
+    <rect x="452" y="658" width="206" height="44" rx="8" stroke-width="0.5"/>
+    <text class="th" x="555" y="672" text-anchor="middle" dominant-baseline="central">Wikipedia articles (8)</text>
+    <text class="ts" x="555" y="690" text-anchor="middle" dominant-baseline="central">ETF · bonds · IRA · 401k…</text>
+  </g>
+
+  <!-- TIER 8: Project files -->
+  <g class="c-gray">
+    <rect x="22" y="718" width="636" height="22" rx="6" stroke-width="0.5"/>
+    <text class="ts" x="340" y="729" text-anchor="middle" dominant-baseline="central">Project files</text>
+  </g>
+  <g class="c-gray">
+    <rect x="22"  y="750" width="140" height="44" rx="8" stroke-width="0.5"/>
+    <text class="th" x="92"  y="766" text-anchor="middle" dominant-baseline="central">test_agents.py</text>
+    <text class="ts" x="92"  y="784" text-anchor="middle" dominant-baseline="central">6 / 6 passing</text>
+  </g>
+  <g class="c-gray">
+    <rect x="174" y="750" width="140" height="44" rx="8" stroke-width="0.5"/>
+    <text class="th" x="244" y="766" text-anchor="middle" dominant-baseline="central">portfolio.json</text>
+    <text class="ts" x="244" y="784" text-anchor="middle" dominant-baseline="central">persistent storage</text>
+  </g>
+  <g class="c-gray">
+    <rect x="326" y="750" width="140" height="44" rx="8" stroke-width="0.5"/>
+    <text class="th" x="396" y="766" text-anchor="middle" dominant-baseline="central">config.yaml</text>
+    <text class="ts" x="396" y="784" text-anchor="middle" dominant-baseline="central">app configuration</text>
+  </g>
+  <g class="c-gray">
+    <rect x="478" y="750" width="180" height="44" rx="8" stroke-width="0.5"/>
+    <text class="th" x="568" y="766" text-anchor="middle" dominant-baseline="central">requirements.txt</text>
+    <text class="ts" x="568" y="784" text-anchor="middle" dominant-baseline="central">all dependencies</text>
+  </g>
+</svg>

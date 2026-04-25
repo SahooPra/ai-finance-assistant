@@ -1,10 +1,10 @@
 {
-  "cash_balance": 8587.68,
+  "cash_balance": 7503.44,
   "holdings": {
     "AAPL": {
-      "shares": 17.0,
-      "avg_cost": 199.85,
-      "total_invested": 3397.42
+      "shares": 21.0,
+      "avg_cost": 213.41,
+      "total_invested": 4481.66
     },
     "MSFT": {
       "shares": 5,
@@ -33,6 +33,24 @@
     }
   },
   "transactions": [
+    {
+      "date": "2026-04-24 20:35",
+      "type": "BUY",
+      "ticker": "AAPL",
+      "shares": 2.0,
+      "price": 271.06,
+      "total": 542.12,
+      "note": "Bought via chat"
+    },
+    {
+      "date": "2026-04-24 18:14",
+      "type": "BUY",
+      "ticker": "AAPL",
+      "shares": 2.0,
+      "price": 271.06,
+      "total": 542.12,
+      "note": "Bought via chat"
+    },
     {
       "date": "2026-04-24 16:46",
       "type": "BUY",

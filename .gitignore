@@ -19,3 +19,7 @@ build/
 # OS
 .DS_Store
 Thumbs.db
+
+# Root level test and utility scripts
+test_*.py
+rebuild_*.py

@@ -70,7 +70,7 @@ with tab1:
             "What is the price of Apple stock?",
             "How do I save for retirement?",
             "What's the latest news on Tesla?",
-            "How does a Roth IRA work?",
+            "How does a Wash Sale work?",
         ]
         for i, suggestion in enumerate(suggestions):
             if cols[i % 3].button(suggestion, key=f"sug_{i}"):

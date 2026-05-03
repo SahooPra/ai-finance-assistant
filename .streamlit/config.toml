@@ -3,6 +3,12 @@ port = 7860
 enableCORS = false
 enableXsrfProtection = false
 headless = true
+address = "0.0.0.0"
 
 [browser]
 gatherUsageStats = false
+serverAddress = "0.0.0.0"
+serverPort = 7860
+
+[theme]
+base = "dark"

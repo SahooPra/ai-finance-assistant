@@ -2,13 +2,9 @@
 port = 7860
 enableCORS = false
 enableXsrfProtection = false
-headless = true
-address = "0.0.0.0"
+headless = false
 
 [browser]
 gatherUsageStats = false
-serverAddress = "0.0.0.0"
+serverAddress = "localhost"
 serverPort = 7860
-
-[theme]
-base = "dark"
